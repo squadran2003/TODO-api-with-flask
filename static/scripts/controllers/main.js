@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('todoListApp')
-.controller('mainCtrl', function($scope, Todo, dataService){
+.controller('mainCtrl', function($scope, Todo){
 
-  $scope.todos = dataService.todos;
+  $scope.todos = Todo.get();
 
   $scope.addTodo = function() {
     var todo = new Todo();

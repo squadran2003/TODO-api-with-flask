@@ -6,7 +6,7 @@ import models
 
 todo_fields = {
     'id':fields.Integer,
-    'title':fields.String,
+    'name':fields.String,
 }
 
 def todo_or_404(todo_id):
@@ -21,7 +21,7 @@ class TodoList(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument(
-            'title',
+            'name',
             required = True,
             help = 'No todos title provided',
             location = ['form','json']
@@ -30,9 +30,10 @@ class TodoList(Resource):
         )
         super().__init__()
 
+    @marshal_with(todo_fields)
     def get(self):
         todos = [marshal(todo,todo_fields) for todo in models.Todo.select()]
-        return {'todos':todos}
+        return todos
 
     @marshal_with(todo_fields)
     def post(self):
@@ -46,24 +47,46 @@ class TodoList(Resource):
 
 
 class Todo(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument(
+            'name',
+            required = True,
+            help = 'No todos title provided',
+            location = ['form','json']
+
+
+        )
+        super().__init__()
+
+
     @marshal_with(todo_fields)
     def get(self,id):
         return todo_or_404(id)
+
 
     @marshal_with(todo_fields)
     def put(self,id):
         args = self.reqparse.parse_args()
         try:
-            todo = models.Todo.update(**args).where(models.Todo.id==id)
+            query = models.Todo.update(**args).where(models.Todo.id==id)
+            query.execute()
         except models.Todo.DoesNotExist:
             abort(404)
         else:
-            return (todo, 201,
-                    {'Location':url_for('resources.todos.todo',id=todo.id)}
+            return (todo_or_404(id), 200,
+                    {'Location':url_for('resources.todos.todo',id=id)}
                     )
 
+    @marshal_with(todo_fields)
     def delete(self,id):
-        return jsonify({'name':'I need to get milk'})
+        try:
+            query = models.Todo.delete().where(models.Todo.id==id)
+            query.execute()
+        except models.DoesNotExist:
+            abort(404)
+        else:
+            return ('',201,{'Location':url_for('resources.todos.todos')})
 
 todos_api = Blueprint('resources.todos',__name__)
 api = Api(todos_api)

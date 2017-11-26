@@ -2,7 +2,7 @@
 
 angular.module('todoListApp')
 .controller('todoCtrl', function($scope, Todo) {
-  $scope.deleteTodo = function(todo, index) {
+  $scope.deleteTodo = function(todo,index) {
     $scope.todos.splice(index, 1);
     todo.$delete();
   };
@@ -17,7 +17,7 @@ angular.module('todoListApp')
       if (todo.id) {
         todo.$update();
       } else {
-        todo.$save();
+        todo.$save(todo);
       }
 
     });

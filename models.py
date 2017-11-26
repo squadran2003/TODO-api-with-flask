@@ -19,7 +19,7 @@ class User(Model):
         database = DATABASE
 
 class Todo(Model):
-    title = CharField()
+    name = CharField()
     created_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
