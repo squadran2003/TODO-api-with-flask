@@ -20,7 +20,9 @@ angular.module('todoListApp')
          'save':{
              method:'POST',
              isArray:false,
+
          }
       });
+
 
   });
