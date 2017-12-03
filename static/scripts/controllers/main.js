@@ -3,7 +3,7 @@
 angular.module('todoListApp')
 .controller('mainCtrl', function($scope, Todo){
 
-  $scope.todos = Todo.get();
+  $scope.todos = Todo.query();
 
   $scope.addTodo = function() {
     var todo = new Todo();

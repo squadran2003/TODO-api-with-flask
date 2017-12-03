@@ -25,10 +25,6 @@ def get_users_todos():
     todos = models.Todo.select().where(models.Todo.user==g.user)
     return todos
 
-def add_todo(todo):
-    todo.user = request.user
-    return todo
-
 
 class TodoList(Resource):
     def __init__(self):
@@ -47,6 +43,7 @@ class TodoList(Resource):
     @auth.login_required
     @marshal_with(todo_fields)
     def get(self):
+        print(g.user.id)
         todos = [marshal(todo,todo_fields) for todo in get_users_todos()]
         return (todos,200,{'Location':url_for('resources.todos.todos')})
 
