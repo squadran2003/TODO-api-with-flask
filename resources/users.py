@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, make_response
+from flask import Blueprint, abort, make_response, json
 from flask.ext.restful import (Resource, Api, reqparse,
                                 marshal,marshal_with, fields, url_for)
 
@@ -58,12 +58,12 @@ class UserList(Resource):
         users = [marshal(user,user_fields) for user in models.User.select()]
         return (users,200,{'Location':url_for('resources.users.users')})
 
-
+    @marshal_with(user_fields)
     def post(self):
         args = self.reqparse.parse_args()
         if args.get('password')== args.get('verify_password'):
             user = models.User.create_user(**args)
-            return marshal(user,user_fields),201
+            return (user, 201)
         else:
             return make_response(
                         json.dumps(
