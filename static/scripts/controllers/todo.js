@@ -2,9 +2,11 @@
 
 angular.module('todoListApp')
 .controller('todoCtrl', function($scope, Todo) {
+
+
   $scope.deleteTodo = function(todo,index) {
     $scope.todos.splice(index, 1);
-    todo.$delete();
+    Todo.delete(todo);
   };
 
   $scope.saveTodos = function() {
@@ -15,9 +17,9 @@ angular.module('todoListApp')
     });
     filteredTodos.forEach(function(todo) {
       if (todo.id) {
-        todo.$update();
+        Todo.update(todo);
       } else {
-        todo.$save(todo);
+        Todo.save(todo);
       }
 
     });

@@ -1,16 +1,28 @@
 'use strict';
 
 angular.module('todoListApp')
-.factory('Todo', function($resource){
+.factory('Todo', function($resource,mytoken){
   return $resource('/api/v1/todos/:id', {id: '@id'}, {
-    update: {
-      method: 'PUT'
+    'update': {
+      method: 'PUT',
+      headers:{'Authorization':'token '+mytoken}
+    },
+    'save': {
+      method: 'POST',
+      headers:{'Authorization':'token '+mytoken}
+    },
+    'delete': {
+      method: 'DELETE',
+      headers:{'Authorization':'token '+mytoken}
     },
     query:{
-        method:'GET',
-        headers:{
-            'Authorization':'token '+' eyJhbGciOiJIUzI1NiIsImlhdCI6MTUxMjI4OTkwMCwiZXhwIjoxNTEyMjkyOTAwfQ.eyJpZCI6MX0.vpTJ403nkRxGlzYURxzPa9_9UjGj1gbZckREBVGz7dE'
-        }
-    }
+      method:'GET',
+      isArray:true,
+      headers:{'Authorization':'token '+mytoken}
+    },
+    
+
   });
 });
+
+

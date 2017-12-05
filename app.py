@@ -1,5 +1,5 @@
-from flask import Flask, g, jsonify, render_template
-from auth import auth
+from flask import Flask, g, jsonify,render_template
+from auth import *
 
 import config
 import models
@@ -11,11 +11,17 @@ app.register_blueprint(users_api,url_prefix='/api/v1')
 app.register_blueprint(todos_api,url_prefix='/api/v1')
 
 
-
-
 @app.route('/')
 def my_todos():
     return render_template('index.html')
+
+
+@app.route('/isAuthenticated')
+def isAuthenticated():
+    if basic_auth.username() or token_auth.username():
+        return "1"
+    else:
+        return "2"
 
 
 @app.route('/api/v1/users/token',methods=['GET'])

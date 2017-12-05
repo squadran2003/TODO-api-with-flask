@@ -7,18 +7,20 @@ import models
 
 class TestTodoModel(unittest.TestCase):
     def setUp(self):
-        self.todo = models.Todo.create(name="go swimming at 10")
+        self.user = models.User.create(username="leo",
+                            password="123",email="cormackandy@hotmail.com")
+        self.todo = models.Todo.create(name="go swimming at 10",user=self.user)
         self.assertNotEqual(self.todo.created_at, datetime.datetime.now)
 
     def test_todo_list(self):
-        todos = models.Todo.select()
+        todos = models.Todo.select().where(models.Todo.user==self.user)
         self.assertIn(self.todo,todos)
 
 
 class TestUserModel(unittest.TestCase):
     def setUp(self):
-        self.user = models.User.create(username="andy10",password="andy10",
-                                    email="andy10@hotmail.com")
+        self.user = models.User.create(username="andy12",password="andy12",
+                                    email="andy12@hotmail.com")
         self.assertNotEqual(self.user.created_at, datetime.datetime.now)
 
     def test_user_list(self):
@@ -28,8 +30,11 @@ class TestUserModel(unittest.TestCase):
 
 class TestTodoApi(unittest.TestCase):
     def setUp(self):
+        self.user = models.User.create(username="google",
+                    password="google",email="leo@google.com")
         self.client = app.test_client()
-        self.todo = models.Todo.create(name="Get Milk from the shops")
+        self.todo = models.Todo.create(name="Get Milk from the shops",
+                                            user = self.user)
 
     def test_todos_get(self):
         response = self.client.get(url_for('resources.todos.todos'))
