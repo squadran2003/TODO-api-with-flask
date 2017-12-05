@@ -7,8 +7,7 @@ import models
 
 class TestTodoModel(unittest.TestCase):
     def setUp(self):
-        self.user = models.User.create(username="leo",
-                            password="123",email="cormackandy@hotmail.com")
+        self.user = models.User.get(username="andy")
         self.todo = models.Todo.create(name="go swimming at 10",user=self.user)
         self.assertNotEqual(self.todo.created_at, datetime.datetime.now)
 
@@ -19,8 +18,7 @@ class TestTodoModel(unittest.TestCase):
 
 class TestUserModel(unittest.TestCase):
     def setUp(self):
-        self.user = models.User.create(username="andy12",password="andy12",
-                                    email="andy12@hotmail.com")
+        self.user = models.User.get(username="andy")
         self.assertNotEqual(self.user.created_at, datetime.datetime.now)
 
     def test_user_list(self):
@@ -30,8 +28,7 @@ class TestUserModel(unittest.TestCase):
 
 class TestTodoApi(unittest.TestCase):
     def setUp(self):
-        self.user = models.User.create(username="google",
-                    password="google",email="leo@google.com")
+        self.user = models.User.get(username="andy")
         self.client = app.test_client()
         self.todo = models.Todo.create(name="Get Milk from the shops",
                                             user = self.user)
@@ -43,14 +40,16 @@ class TestTodoApi(unittest.TestCase):
 
     def test_todos_post(self):
         response = self.client.post(url_for('resources.todos.todos'),
-                                    data={'name':'Go jogging at 10am'})
+                                    data={'name':'Go jogging at 10am',
+                                                'user':self.user})
         myresponse = json.loads(response.get_data())
         self.assertEqual('Go jogging at 10am',myresponse.get('name'))
 
     def test_todos_put(self):
         response = self.client.put(url_for('resources.todos.todos'),
                                     data={'id':self.todo.id,
-                                    'name':'Go jogging at 10am'})
+                                    'name':'Go jogging at 10am',
+                                    'user':self.user})
         myresponse = json.loads(response.get_data())
         self.assertNotEqual(response.status_code,404)
 
