@@ -1,6 +1,7 @@
 import unittest,datetime, json
 from app import app
-import requests, base64
+from flask import request
+import base64
 from flask.ext.restful import url_for
 import models
 
@@ -78,12 +79,42 @@ class TestUsersApi(unittest.TestCase):
     def setUp(self):
         self.user = models.User.get(username="andy")
         self.client = app.test_client()
+        self.headers = {
+            'Authorization': 'Basic %s' % base64.b64encode(b"andy:123").decode("ascii")
+        }
+        self.token=""
 
 
     def test_users_get(self):
         response = self.client.get(url_for('resources.users.users'))
         myresponse = json.loads(response.get_data())
         self.assertTrue(self.check_username_in_json(myresponse))
+    
+
+    def test_user_token(self):
+        """this method tests to see if a token is returned"""
+        response = self.client.get('/api/v1/users/token',headers=self.headers)
+        myresponse = json.loads(response.get_data())
+        self.token = myresponse.get('token')
+        self.assertNotEqual(myresponse,[])
+    
+    
+    def test_user_token_auth(self):
+        """this method will test that the token work when 
+        used as a auth method"""
+
+        token_header = {
+            'Authorization': 'token '+self.token
+        }
+
+        response = self.client.get(
+                            url_for('resources.todos.todos'),
+                                        headers=token_header)
+        self.assertTrue(response,200)
+
+
+        
+
     
 
     def check_username_in_json(self,json_string):

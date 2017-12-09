@@ -1,4 +1,4 @@
-from flask import Flask, g, jsonify, render_template
+from flask import Flask, g, jsonify, render_template, request
 from auth import auth
 
 import config
@@ -13,6 +13,15 @@ app.register_blueprint(todos_api, url_prefix='/api/v1')
 
 @app.route('/')
 def my_todos():
+    if request.cookies.get('token'):
+        return render_template('index.html')
+    else:
+        return render_template('login.html')
+
+@app.route('/gettodos')
+def gettodos():
+    if not request.cookies.get('token'):
+        return render_template('login.html')
     return render_template('index.html')
 
 

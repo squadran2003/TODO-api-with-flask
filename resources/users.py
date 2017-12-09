@@ -3,9 +3,11 @@ from flask.ext.restful import (Resource, Api, reqparse,
                                 marshal,marshal_with, fields, url_for)
 
 
+
 import models
 
 user_fields={
+    'id':fields.Integer,
     'username':fields.String
 
 }
@@ -107,11 +109,20 @@ class User(Resource):
 
 
     @marshal_with(user_fields)
-    def get(self):
-        user = get_user_or_404(id)
-        return (user,201,
-                {'Location':url_for('resources.users.user',id=user.id)}
-                )
+    def get(self,username_or_email,password):
+        try:
+            user = models.User.get(
+                (models.User.username==username_or_email)|
+                (models.User.email==username_or_email)
+            )
+        except models.User.DoesNotExist:
+            abort(404)
+        else:
+            if not user.verify_password(password):
+                return (user,400)
+            else:
+                return (user,200)
+
 
 
 users_api = Blueprint('resources.users',__name__)
@@ -123,6 +134,6 @@ api.add_resource(
 )
 api.add_resource(
     User,
-    '/users/<int:id>',
+    '/users/<string:username_or_email>/<string:password>',
     endpoint='user'
 )

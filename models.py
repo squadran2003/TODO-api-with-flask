@@ -49,8 +49,13 @@ class User(Model):
     def set_password(password):
         return HASHER.hash(password)
 
+    
     def verify_password(self, password):
-        return HASHER.verify(self.password, password)
+        try:
+            return HASHER.verify(self.password, password)
+        except:
+            return False
+    
 
     def generate_auth_token(self, expires=3000):
         serializer = Serializer(config.SECRET_KEY, expires_in=expires)
