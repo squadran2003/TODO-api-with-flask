@@ -1,10 +1,10 @@
 # TODO-api-with-flask
 **Flask restful api for a todo app, this app is part of the 10th project as part of teamtreehouse techdegree.**
 
-*The frontend was built in angularjs*
+The frontend was built in angularjs
 
 
-# Examples
+# Code Example
 
 ```
     from flask import Blueprint, abort, g
@@ -61,7 +61,7 @@
 # Installation
 
 clone the repo, create a virtualenv using python3
-run the commands below
+and run the commands below
 
 ```
    pip install -r requirements.txt
