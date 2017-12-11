@@ -2,6 +2,13 @@
 
 angular.module('todoListApp')
 .controller('loginCtrl',function($scope,login,$http,$base64,$cookies,$location,Authenticate){
+
+            // if the user closes the browser remove the cookie
+        $scope.onExit = function(){
+                
+                $cookies.remove('token');
+        };
+        
         $scope.error = false;
         $scope.errorMessage="this is an error";
         $scope.signin = function(){

@@ -18,6 +18,7 @@ def my_todos():
     else:
         return render_template('login.html')
 
+
 @app.route('/gettodos')
 def gettodos():
     if not request.cookies.get('token'):

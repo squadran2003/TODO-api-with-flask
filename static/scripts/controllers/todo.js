@@ -3,10 +3,9 @@
 angular.module('todoListApp')
 .controller('todoCtrl', function($scope, Todo) {
 
-   $scope.todos = Todo.query();
-   
-  
-    $scope.deleteTodo = function(todo,index) {
+  $scope.todos = Todo.query();
+
+   $scope.deleteTodo = function(todo,index) {
       $scope.todos.splice(index, 1);
       Todo.delete(todo);
     };

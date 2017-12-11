@@ -1,9 +1,8 @@
 'use strict';
 
 angular.module('todoListApp')
-.controller('mainCtrl', function($scope, Todo){
+.controller('mainCtrl', function($scope, Todo, $cookies){
 
-  //$scope.todos = Todo.query();
 
   $scope.addTodo = function() {
     var todo = new Todo();
